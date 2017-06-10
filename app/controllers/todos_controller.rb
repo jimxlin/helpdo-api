@@ -1,6 +1,5 @@
-# app/controllers/todos_controller.rb
 class TodosController < ApplicationController
-  # before_action :authenticate_user
+  before_action :authenticate_user
   before_action :set_todo, only: [:show, :update, :destroy]
 
   # GET /todos
@@ -9,15 +8,15 @@ class TodosController < ApplicationController
     json_response(@todos)
   end
 
+  # GET /todos/:id
+  def show
+    json_response(@todo)
+  end
+
   # POST /todos
   def create
     @todo = current_user.todos.create!(todo_params)
     json_response(@todo, :created)
-  end
-
-  # GET /todos/:id
-  def show
-    json_response(@todo)
   end
 
   # PUT /todos/:id
