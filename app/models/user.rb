@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   has_many :inverse_friends,  # request was sent by the friend
             ->{ where(friendships: { is_accepted: true}) },
-            through: :received_friendships,
+            through: :inverse_friendships,
             source: :user
 
   has_many :friend_requests, # sent friend requests
@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   has_many :inverse_friend_requests, # incoming friend requests
             -> { where(friendships: { is_accepted: false}) },
-            through: :received_friendships,
+            through: :inverse_friendships,
             source: :user
 
   has_many :todos, dependent: :destroy
@@ -33,4 +33,12 @@ class User < ApplicationRecord
   validates :password_digest, presence: true
 
   has_secure_password
+
+  def all_friends
+    friends + inverse_friends
+  end
+
+  def pending_friend_requests
+    friend_requests + inverse_friend_requests
+  end
 end
