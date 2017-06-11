@@ -3,25 +3,25 @@ class User < ApplicationRecord
   has_many :friendships, dependent: :destroy
 
   # rows where friend_id == self.id
-  has_many :received_friendships, class_name: "Friendship", foreign_key: "friend_id",
+  has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id",
             dependent: :destroy
 
-  has_many :sought_friends,
+  has_many :friends,          # request was sent by self
             ->{ where(friendships: { is_accepted: true}) },
             through: :friendships,
-            source: :friend # friend_id
+            source: :friend
 
-  has_many :received_friends,
+  has_many :inverse_friends,  # request was sent by the friend
             ->{ where(friendships: { is_accepted: true}) },
             through: :received_friendships,
-            source: :user # user_id
+            source: :user
 
-  has_many :seeking_friendship, # sent friend requests
+  has_many :friend_requests, # sent friend requests
             ->{ where(friendships: { is_accepted: false}) },
             through: :friendships,
             source: :friend
 
-  has_many :receiving_friendships, # received friend requests
+  has_many :inverse_friend_requests, # incoming friend requests
             -> { where(friendships: { is_accepted: false}) },
             through: :received_friendships,
             source: :user
