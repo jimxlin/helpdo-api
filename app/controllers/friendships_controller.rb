@@ -10,8 +10,13 @@ class FriendshipsController < ApplicationController
 
   # PUT /friendships/:id
   def update
-    @friendship.update(friendship_params)
-    head :no_content
+    # user cannot accept a friend request that they initiated
+    if @friendship.user_id == current_user.id
+      json_response('Cannot accept own friend request', :unauthorized)
+    else
+      @friendship.update!(friendship_params) # what if friendship row no longer exists
+      head :no_content
+    end
   end
 
   # DELETE /friendships/:id

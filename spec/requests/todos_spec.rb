@@ -12,7 +12,12 @@ RSpec.describe 'Todos API', type: :request do
   end
 
   describe 'GET /todos' do
-    before { get '/todos', headers: authenticated_header(user) }
+    before do
+      get(
+        '/todos',
+        headers: authenticated_header(user)
+      )
+    end
 
     it 'returns all todos' do
       # Note `json` is a custom spec helper to parse JSON responses
@@ -26,7 +31,12 @@ RSpec.describe 'Todos API', type: :request do
   end
 
   describe 'GET /todos/:id' do
-    before { get "/todos/#{todo_id}", headers: authenticated_header(user) }
+    before do
+      get(
+        "/todos/#{todo_id}",
+        headers: authenticated_header(user)
+      )
+    end
 
     context 'when the record exists' do
       it 'returns the todo' do
@@ -40,7 +50,7 @@ RSpec.describe 'Todos API', type: :request do
     end
 
     context 'when the record does not exist' do
-      let(:todo_id) { 100 }
+      let(:todo_id) { 0 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -58,7 +68,13 @@ RSpec.describe 'Todos API', type: :request do
     end
 
     context 'when the request is valid' do
-      before { post '/todos', params: valid_attributes, headers: authenticated_header(user) }
+      before do
+        post(
+          '/todos',
+          params: valid_attributes,
+          headers: authenticated_header(user)
+        )
+      end
 
       it 'creates a todo' do
         expect(json['title']).to eq('Shopping List')
@@ -70,7 +86,13 @@ RSpec.describe 'Todos API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/todos', params: { title: '' }, headers: authenticated_header(user) }
+      before do
+        post(
+          '/todos',
+          params: { title: '' },
+          headers: authenticated_header(user)
+        )
+      end
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -86,7 +108,13 @@ RSpec.describe 'Todos API', type: :request do
   describe 'PUT /todos/:id' do
     let(:valid_attributes) { { title: 'Grocery list' } }
 
-    before { put "/todos/#{todo_id}", params: valid_attributes, headers: authenticated_header(user) }
+    before do
+      put(
+        "/todos/#{todo_id}",
+        params: valid_attributes,
+        headers: authenticated_header(user)
+      )
+    end
 
     context 'when the record exists' do
       it 'updates the record' do
@@ -114,7 +142,12 @@ RSpec.describe 'Todos API', type: :request do
   end
 
   describe 'DELETE /todos/:id' do
-    before { delete "/todos/#{todo_id}", headers: authenticated_header(user) }
+    before do
+      delete(
+        "/todos/#{todo_id}",
+        headers: authenticated_header(user)
+      )
+    end
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

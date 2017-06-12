@@ -14,7 +14,12 @@ RSpec.describe 'Tasks API' do
   end
 
   describe 'GET /todos/:todo_id/tasks' do
-    before { get "/todos/#{todo_id}/tasks", headers: authenticated_header(user) }
+    before do
+      get(
+        "/todos/#{todo_id}/tasks",
+        headers: authenticated_header(user)
+      )
+    end
 
     context 'when todo exists' do
       it 'returns status code 200' do
@@ -41,7 +46,12 @@ RSpec.describe 'Tasks API' do
   end
 
   describe 'GET /todos/:todo_id/tasks/:id' do
-    before { get "/todos/#{todo_id}/tasks/#{id}", headers: authenticated_header(user) }
+    before do
+      get(
+        "/todos/#{todo_id}/tasks/#{id}",
+        headers: authenticated_header(user)
+      )
+    end
 
     context 'when todo task exists' do
       it 'returns status code 200' do
@@ -70,7 +80,13 @@ RSpec.describe 'Tasks API' do
     let(:valid_attributes) { { name: 'Get milk', is_done: false } }
 
     context 'when the request is valid' do
-      before { post "/todos/#{todo_id}/tasks", params: valid_attributes, headers: authenticated_header(user) }
+      before do
+        post(
+          "/todos/#{todo_id}/tasks",
+          params: valid_attributes,
+          headers: authenticated_header(user)
+        )
+      end
 
       it 'returns the todo that the task belongs to' do
         expect(json['title']).to eq(todo.title)
@@ -82,7 +98,13 @@ RSpec.describe 'Tasks API' do
     end
 
     context 'when the request is invalid' do
-      before { post "/todos/#{todo_id}/tasks", params: {}, headers: authenticated_header(user) }
+      before do
+        post(
+          "/todos/#{todo_id}/tasks",
+          params: {},
+          headers: authenticated_header(user)
+        )
+      end
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -97,7 +119,13 @@ RSpec.describe 'Tasks API' do
   describe 'PUT /todos/:todo_id/tasks/:id' do
     let(:valid_attributes) { { is_done: true } }
 
-    before { put "/todos/#{todo_id}/tasks/#{id}", params: valid_attributes, headers: authenticated_header(user) }
+    before do
+      put(
+        "/todos/#{todo_id}/tasks/#{id}",
+        params: valid_attributes,
+        headers: authenticated_header(user)
+      )
+    end
 
     context 'when the task exists' do
       it 'updates the task' do
@@ -125,7 +153,12 @@ RSpec.describe 'Tasks API' do
   end
 
   describe 'DELETE /todos/:id' do
-    before { delete "/todos/#{todo_id}/tasks/#{id}", headers: authenticated_header(user) }
+    before do
+      delete(
+        "/todos/#{todo_id}/tasks/#{id}",
+        headers: authenticated_header(user)
+      )
+    end
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

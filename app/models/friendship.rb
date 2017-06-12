@@ -3,7 +3,7 @@ class Friendship < ApplicationRecord
   belongs_to :user
   belongs_to :friend, class_name: "User"
 
-  validate :friendships_and_their_inverses_must_be_unique
+  validate :friendships_and_their_inverses_must_be_unique, :on => :create
 
   def friendships_and_their_inverses_must_be_unique
     if Friendship.where({ user_id: user_id, friend_id: friend_id }).exists?
