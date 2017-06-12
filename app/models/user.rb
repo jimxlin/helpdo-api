@@ -21,7 +21,7 @@ class User < ApplicationRecord
             through: :friendships,
             source: :friend
 
-  has_many :inverse_friend_requests, # incoming friend requests
+  has_many :inverse_friend_requests, # received friend requests
             -> { where(friendships: { is_accepted: false}) },
             through: :inverse_friendships,
             source: :user
@@ -38,7 +38,7 @@ class User < ApplicationRecord
     friends + inverse_friends
   end
 
-  def pending_friend_requests
-    friend_requests + inverse_friend_requests
-  end
+  # def pending_friend_requests
+  #   friend_requests + inverse_friend_requests
+  # end
 end

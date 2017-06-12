@@ -10,6 +10,36 @@ RSpec.describe 'Friendships API', type: :request do
     { 'Authorization' => "Bearer #{token}" }
   end
 
+  describe 'GET /friendships' do
+    before do
+      # friends
+      user.friendships.create(friend_id: create(:user).id, is_accepted: true)
+      user.friendships.create(friend_id: create(:user).id, is_accepted: true)
+      # sent friend requests
+      user.friendships.create(friend_id: create(:user).id)
+      user.friendships.create(friend_id: create(:user).id)
+      # received friend requests
+      create(:user).friendships.create(friend_id: user.id)
+      create(:user).friendships.create(friend_id: user.id)
+
+      get(
+        '/friendships',
+        headers: authenticated_header(user)
+      )
+    end
+
+    it 'returns all friends and friend requests' do
+      # Note `json` is a custom spec helper to parse JSON responses
+      expect(json['friends'].length).to eq(2)
+      expect(json['sent_friend_requests'].length).to eq(2)
+      expect(json['received_friend_requests'].length).to eq(2)
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
   describe 'POST /friendships' do
     let(:valid_attributes) do
       { friend_id: other_user.id }

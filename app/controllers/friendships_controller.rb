@@ -2,6 +2,16 @@ class FriendshipsController < ApplicationController
   before_action :authenticate_user
   before_action :set_friendship, only: [:update, :destroy]
 
+  # Get /friendships
+  def index
+    friends_and_requests = {
+      friends: current_user.all_friends.pluck(:id, :name),
+      sent_friend_requests: current_user.friend_requests.pluck(:id, :name),
+      received_friend_requests: current_user.inverse_friend_requests.pluck(:id, :name)
+    }
+    json_response(friends_and_requests.to_json)
+  end
+
   # POST /friendships
   def create
     @friendship = current_user.friendships.create!(friendship_params)
