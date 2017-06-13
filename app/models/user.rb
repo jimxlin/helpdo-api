@@ -32,13 +32,17 @@ class User < ApplicationRecord
   validates :email, presence: true
   validates :password_digest, presence: true
 
+  after_save :downcase_name
+
   has_secure_password
 
   def all_friends
     friends + inverse_friends
   end
 
-  # def pending_friend_requests
-  #   friend_requests + inverse_friend_requests
-  # end
+  private
+
+  def downcase_name
+    update_column(:name, name.downcase)
+  end
 end

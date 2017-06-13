@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
-  # TODO implement search users feature
-  
+  before_action :authenticate_user, only: [:index]
+
   # GET /users?query=...
   def index
-    # params[:query]
+    query = params[:query]
+    users = User.where(name: query.downcase).pluck(:id, :name, :bio)
+    json_response(users)
   end
 
   # POST /users
@@ -19,7 +21,8 @@ class UsersController < ApplicationController
       :name,
       :email,
       :password,
-      :password_confirmation
+      :password_confirmation,
+      :bio
     )
   end
 end

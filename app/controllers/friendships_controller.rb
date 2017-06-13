@@ -2,7 +2,7 @@ class FriendshipsController < ApplicationController
   before_action :authenticate_user
   before_action :set_friendship, only: [:update, :destroy]
 
-  # Get /friendships
+  # GET /friendships
   def index
     friends_and_requests = {
       friends: current_user.all_friends.pluck(:id, :name),
@@ -24,7 +24,7 @@ class FriendshipsController < ApplicationController
     if @friendship.user_id == current_user.id
       json_response('Cannot accept own friend request', :unauthorized)
     else
-      @friendship.update!(friendship_params) # what if friendship row no longer exists
+      @friendship.update!(friendship_params) # FIXME what if friendship row no longer exists
       head :no_content
     end
   end
