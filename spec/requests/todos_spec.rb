@@ -64,7 +64,7 @@ RSpec.describe 'Todos API', type: :request do
 
   describe 'POST /todos' do
     let(:valid_attributes) do
-      { title: 'Shopping List' }
+      { title: 'Shopping List', is_shared: false }
     end
 
     context 'when the request is valid' do

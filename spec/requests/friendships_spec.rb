@@ -19,7 +19,7 @@ RSpec.describe 'Friendships API', type: :request do
       # sent friend requests
       user.friendships.create(friend_id: create(:user).id)
       user.friendships.create(friend_id: create(:user).id)
-      
+
       # received friend requests
       create(:user).friendships.create(friend_id: user.id)
       create(:user).friendships.create(friend_id: user.id)

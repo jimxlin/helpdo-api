@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :memberships
+  
   # rows where user_id == self.id
   has_many :friendships, dependent: :destroy
 

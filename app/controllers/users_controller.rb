@@ -4,8 +4,12 @@ class UsersController < ApplicationController
   # GET /users?query=...
   def index
     query = params[:query]
-    users = User.where(name: query.downcase).pluck(:id, :name, :bio)
-    json_response(users)
+    if query
+      users = User.where(name: query.downcase).pluck(:id, :name, :bio)
+      json_response(users)
+    else
+      json_response([])
+    end
   end
 
   # POST /users

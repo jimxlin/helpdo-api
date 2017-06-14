@@ -34,7 +34,7 @@ class TodosController < ApplicationController
   private
 
   def todo_params
-    params.permit(:title)
+    params.permit(:title, :is_shared)
   end
 
   def set_todo

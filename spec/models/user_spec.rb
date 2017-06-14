@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  it { should have_many(:memberships) }
+  
   it { should have_many(:friendships).dependent(:destroy) }
   it { should have_many(:inverse_friendships).dependent(:destroy) }
   it { should have_many(:friends) }
