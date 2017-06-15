@@ -1,7 +1,8 @@
 require 'rails_helper'
-
+# TODO test for is_shared todos
 RSpec.describe 'Tasks API' do
   let!(:user) { create(:user) }
+  let!(:intruder) { create(:user) }
   let!(:todo) { create(:todo, user_id: user.id) }
   let!(:tasks) { create_list(:task, 20, todo_id: todo.id) }
   let(:todo_id) { todo.id }
@@ -43,6 +44,14 @@ RSpec.describe 'Tasks API' do
         expect(response.body).to match(/Couldn't find Todo/)
       end
     end
+
+    it 'returns status code 401 for unauthorized users' do
+      get(
+        "/todos/#{todo_id}/tasks",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
+    end
   end
 
   describe 'GET /todos/:todo_id/tasks/:id' do
@@ -73,6 +82,14 @@ RSpec.describe 'Tasks API' do
       it 'returns a not found message' do
         expect(response.body).to match(/Couldn't find Task/)
       end
+    end
+
+    it 'returns status code 401 for unauthorized users' do
+      get(
+        "/todos/#{todo_id}/tasks/#{id}",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
     end
   end
 
@@ -114,6 +131,15 @@ RSpec.describe 'Tasks API' do
         expect(response.body).to match(/Validation failed: Name can't be blank/)
       end
     end
+
+    it 'returns status code 401 for unauthorized users' do
+      post(
+        "/todos/#{todo_id}/tasks",
+        params: valid_attributes,
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
+    end
   end
 
   describe 'PUT /todos/:todo_id/tasks/:id' do
@@ -150,18 +176,33 @@ RSpec.describe 'Tasks API' do
         expect(response.body).to match(/Couldn't find Task/)
       end
     end
+
+    it 'returns status code 401 for unauthorized users' do
+      get(
+        "/todos/#{todo_id}/tasks/#{id}",
+        params: valid_attributes,
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
+    end
   end
 
   describe 'DELETE /todos/:id' do
-    before do
+
+    it 'returns status code 204' do
       delete(
         "/todos/#{todo_id}/tasks/#{id}",
         headers: authenticated_header(user)
       )
+      expect(response).to have_http_status(204)
     end
 
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+    it 'returns status code 401 for unauthorized users' do
+      delete(
+        "/todos/#{todo_id}/tasks/#{id}",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
     end
   end
 end

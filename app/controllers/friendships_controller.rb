@@ -14,8 +14,8 @@ class FriendshipsController < ApplicationController
 
   # POST /friendships
   def create
-    @friendship = current_user.friendships.create!(friendship_params)
-    json_response(@friendship, :created)
+    friendship = current_user.friendships.create!(friendship_params)
+    json_response(friendship, :created)
   end
 
   # PUT /friendships/:id

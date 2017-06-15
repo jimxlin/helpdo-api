@@ -1,7 +1,8 @@
 require 'rails_helper'
-
+# TODO test for is_shared todos
 RSpec.describe 'Todos API', type: :request do
   let!(:user) { create(:user) }
+  let!(:intruder) { create(:user) }
   let!(:todos) { create_list(:todo, 10, user_id: user.id) }
   let(:todo_id) { todos.first.id }
 
@@ -59,6 +60,14 @@ RSpec.describe 'Todos API', type: :request do
       it 'returns a not found message' do
         expect(response.body).to match(/Couldn't find Todo/)
       end
+    end
+
+    it 'returns status code 401 for unauthorized users' do
+      get(
+        "/todos/#{todo_id}",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
     end
   end
 
@@ -139,18 +148,32 @@ RSpec.describe 'Todos API', type: :request do
         expect(response.body).to match(/Couldn't find Todo/)
       end
     end
+
+    it 'returns status code 401 for unauthorized users' do
+      put(
+        "/todos/#{todo_id}",
+        params: valid_attributes,
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
+    end
   end
 
   describe 'DELETE /todos/:id' do
-    before do
+    it 'returns status code 204' do
       delete(
         "/todos/#{todo_id}",
         headers: authenticated_header(user)
       )
+      expect(response).to have_http_status(204)
     end
 
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+    it 'returns status code 401 for unauthorized users' do
+      delete(
+        "/todos/#{todo_id}",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
     end
   end
 end

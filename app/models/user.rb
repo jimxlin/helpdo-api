@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :memberships
-  
+
   # rows where user_id == self.id
   has_many :friendships, dependent: :destroy
 
@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_many :todos, dependent: :destroy
 
   validates :name, presence: true
-  validates :email, presence: true
+  validates :email, presence: true, uniqueness: true
   validates :password_digest, presence: true
 
   after_save :downcase_name
