@@ -1,9 +1,9 @@
 require 'rails_helper'
-# TODO test for is_shared todos
+# TODO differentiate tests for private and public todos
 RSpec.describe 'Tasks API' do
   let!(:user) { create(:user) }
   let!(:intruder) { create(:user) }
-  let!(:todo) { create(:todo, user_id: user.id) }
+  let!(:todo) { create(:todo, user_id: user.id, type: 'PrivateTodo') }
   let!(:tasks) { create_list(:task, 20, todo_id: todo.id) }
   let(:todo_id) { todo.id }
   let(:id) { tasks.first.id }
@@ -14,10 +14,10 @@ RSpec.describe 'Tasks API' do
     { 'Authorization' => "Bearer #{token}" }
   end
 
-  describe 'GET /todos/:todo_id/tasks' do
+  describe 'GET /private_todos/:todo_id/tasks' do
     before do
       get(
-        "/todos/#{todo_id}/tasks",
+        "/private_todos/#{todo_id}/tasks",
         headers: authenticated_header(user)
       )
     end
@@ -47,17 +47,17 @@ RSpec.describe 'Tasks API' do
 
     it 'returns status code 401 for unauthorized users' do
       get(
-        "/todos/#{todo_id}/tasks",
+        "/private_todos/#{todo_id}/tasks",
         headers: authenticated_header(intruder)
       )
       expect(response).to have_http_status(401)
     end
   end
 
-  describe 'GET /todos/:todo_id/tasks/:id' do
+  describe 'GET /private_todos/:todo_id/tasks/:id' do
     before do
       get(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         headers: authenticated_header(user)
       )
     end
@@ -86,20 +86,20 @@ RSpec.describe 'Tasks API' do
 
     it 'returns status code 401 for unauthorized users' do
       get(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         headers: authenticated_header(intruder)
       )
       expect(response).to have_http_status(401)
     end
   end
 
-  describe 'POST /todos/:todo_id/tasks' do
+  describe 'POST /private_todos/:todo_id/tasks' do
     let(:valid_attributes) { { name: 'Get milk', is_done: false } }
 
     context 'when the request is valid' do
       before do
         post(
-          "/todos/#{todo_id}/tasks",
+          "/private_todos/#{todo_id}/tasks",
           params: valid_attributes,
           headers: authenticated_header(user)
         )
@@ -117,7 +117,7 @@ RSpec.describe 'Tasks API' do
     context 'when the request is invalid' do
       before do
         post(
-          "/todos/#{todo_id}/tasks",
+          "/private_todos/#{todo_id}/tasks",
           params: {},
           headers: authenticated_header(user)
         )
@@ -134,7 +134,7 @@ RSpec.describe 'Tasks API' do
 
     it 'returns status code 401 for unauthorized users' do
       post(
-        "/todos/#{todo_id}/tasks",
+        "/private_todos/#{todo_id}/tasks",
         params: valid_attributes,
         headers: authenticated_header(intruder)
       )
@@ -142,12 +142,12 @@ RSpec.describe 'Tasks API' do
     end
   end
 
-  describe 'PUT /todos/:todo_id/tasks/:id' do
+  describe 'PUT /private_todos/:todo_id/tasks/:id' do
     let(:valid_attributes) { { is_done: true } }
 
     before do
       put(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         params: valid_attributes,
         headers: authenticated_header(user)
       )
@@ -179,7 +179,7 @@ RSpec.describe 'Tasks API' do
 
     it 'returns status code 401 for unauthorized users' do
       get(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         params: valid_attributes,
         headers: authenticated_header(intruder)
       )
@@ -187,11 +187,11 @@ RSpec.describe 'Tasks API' do
     end
   end
 
-  describe 'DELETE /todos/:id' do
+  describe 'DELETE /private_todos/:id' do
 
     it 'returns status code 204' do
       delete(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         headers: authenticated_header(user)
       )
       expect(response).to have_http_status(204)
@@ -199,7 +199,7 @@ RSpec.describe 'Tasks API' do
 
     it 'returns status code 401 for unauthorized users' do
       delete(
-        "/todos/#{todo_id}/tasks/#{id}",
+        "/private_todos/#{todo_id}/tasks/#{id}",
         headers: authenticated_header(intruder)
       )
       expect(response).to have_http_status(401)

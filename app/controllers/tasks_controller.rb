@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :authenticate_user
   before_action :set_todo
   before_action :set_todo_task, only: [:show, :update, :destroy]
-  before_action :authorized?
+  before_action :authorize
 
   # TODO make task visible to other users (only for is_shared == false)
 
@@ -42,16 +42,20 @@ class TasksController < ApplicationController
   end
 
   def set_todo
-    @todo = Todo.find(params[:todo_id])
+    if params[:private_todo_id]
+      @todo = Todo.find(params[:private_todo_id])
+    else
+      @todo = Todo.find(params[:public_todo_id])
+    end
   end
 
   def set_todo_task
     @task = @todo.tasks.find_by!(id: params[:id]) if @todo
   end
 
-  def authorized?
-    if (@todo.is_shared && !@todo.admins.find_by_id(current_user.id)) ||
-       (!@todo.is_shared && @todo.creator.id != current_user.id)
+  def authorize
+    if (@todo.type == 'PublicTodo' && !@todo.admins.find_by_id(current_user.id)) ||
+       (@todo.type == 'PrivateTodo' && @todo.creator.id != current_user.id)
       json_response('Not authorized to change this task', :unauthorized)
     end
   end

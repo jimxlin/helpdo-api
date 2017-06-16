@@ -2,8 +2,8 @@ class MembershipsController < ApplicationController
   before_action :authenticate_user
   before_action :set_todo
   before_action :set_membership, only: [:update, :delete]
-  before_action :member?
-  before_action :admin?, only: [:create, :update, :delete]
+  before_action :authorize_member
+  before_action :authorize_admin, only: [:create, :update, :delete]
 
   # GET /todos/:todo_id/memberships
   def index
@@ -40,14 +40,14 @@ class MembershipsController < ApplicationController
     @membership = Membership.find(params[:id])
   end
 
-  def member?
+  def authorize_member
     unless @todo.members.find_by_id(current_user.id) ||
            @todo.admins.find_by_id(current_user.id)
       json_response('You are not a member of this Todo', :unauthorized)
     end
   end
 
-  def admin?
+  def authorize_admin
     unless @todo.admins.find_by_id(current_user.id)
       json_response('You are not an admin of this Todo', :unauthorized)
     end

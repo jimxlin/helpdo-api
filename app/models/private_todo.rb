@@ -1,0 +1,2 @@
+class PrivateTodo < Todo
+end

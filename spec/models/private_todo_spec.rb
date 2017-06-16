@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Todo, type: :model do
+RSpec.describe PrivateTodo, type: :model do
   it { should belong_to(:creator) }
 
   it { should have_many(:tasks).dependent(:destroy) }

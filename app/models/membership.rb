@@ -1,6 +1,6 @@
 class Membership < ApplicationRecord
   belongs_to :user
-  belongs_to :todo
+  belongs_to :public_todo
 
   validates :user, uniqueness: { scope: :todo,
             message: 'Users cannot join a Todo multiple times' }
