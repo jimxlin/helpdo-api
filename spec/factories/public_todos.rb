@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  factory :todo do
+  factory :public_todo do
     title { Faker::Lorem.word }
     user_id { Faker::Number.number(10) }
-    type { 'PrivateTodo' }
+    type { 'PublicTodo' }
   end
 end

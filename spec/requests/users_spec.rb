@@ -5,15 +5,10 @@ RSpec.describe 'Users API', type: :request do
   let(:user)       { create(:user) }
   let(:other_user) { create(:user) }
 
-  # generate JWT with Knock gem
-  def authenticated_header(user)
-    token = Knock::AuthToken.new(payload: { sub: user.id }).token
-    { 'Authorization' => "Bearer #{token}" }
-  end
-
   describe 'GET /users?query=' do
     before { create(:user, name: other_user.name) }
 
+    # Note `authenticated_header` is a custom spec helper to generate JWT with Knock gem
     it 'finds a user based on name' do
       get(
         "/users?query=#{other_user.name}",

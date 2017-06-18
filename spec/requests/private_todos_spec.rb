@@ -1,18 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe 'Todos API', type: :request do
+RSpec.describe 'PrivateTodos API', type: :request do
   let!(:user) { create(:user) }
   let!(:intruder) { create(:user) }
-  let!(:todos) { create_list(:todo, 10, user_id: user.id, type: 'PrivateTodo') }
+  let!(:todos) { create_list(:private_todo, 10, user_id: user.id) }
   let(:todo_id) { todos.first.id }
 
-  # generate JWT with Knock gem
-  def authenticated_header(user)
-    token = Knock::AuthToken.new(payload: { sub: user.id }).token
-    { 'Authorization' => "Bearer #{token}" }
-  end
-
   describe 'GET /private_todos' do
+    # Note `authenticated_header` is a custom spec helper to generate JWT with Knock gem
     before do
       get(
         '/private_todos',

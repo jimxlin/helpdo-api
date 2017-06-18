@@ -5,7 +5,7 @@ class MembershipsController < ApplicationController
   before_action :authorize_member
   before_action :authorize_admin, only: [:create, :update, :delete]
 
-  # GET /todos/:todo_id/memberships
+  # GET /public_todos/:todo_id/memberships
   def index
     all_members = {
       admins: @todo.admins.pluck(:id, :name, :bio),
@@ -14,16 +14,20 @@ class MembershipsController < ApplicationController
     json_response(all_members.to_json)
   end
 
-  # POST /todos/:todo_id/memberships
+  # POST /public_todos/:todo_id/memberships
   def create
-    membership = @todo.memberships.create(membership_params)
+    membership = @todo.memberships.create!(membership_params)
     json_response(membership, :created)
   end
 
-  # PUT todos/:todo_id/memberships/:id
-  # TODO who gets to give / remove admin permissions?
+  # PUT /public_todos/:todo_id/memberships/:id
   def update
-    @membership.update!(membership_params)
+    if @membership.user_id == @todo.creator.id
+      json_response('Not authorized to change creator membership', :unauthorized)
+    else
+      @membership.update!(update_membership_params)
+      head :no_content
+    end
   end
 
   private
@@ -32,8 +36,12 @@ class MembershipsController < ApplicationController
     params.permit(:user_id, :is_admin)
   end
 
+  def update_membership_params
+    params.permit(:is_admin)
+  end
+
   def set_todo
-    @todo = Todo.find(params[:todo_id])
+    @todo = PublicTodo.find(params[:public_todo_id])
   end
 
   def set_membership

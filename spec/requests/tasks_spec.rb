@@ -1,20 +1,15 @@
 require 'rails_helper'
-# TODO differentiate tests for private and public todos
+# TODO differentiate tests for private and public todos, maybe use a new nested route
 RSpec.describe 'Tasks API' do
   let!(:user) { create(:user) }
   let!(:intruder) { create(:user) }
-  let!(:todo) { create(:todo, user_id: user.id, type: 'PrivateTodo') }
+  let!(:todo) { create(:private_todo, user_id: user.id) }
   let!(:tasks) { create_list(:task, 20, todo_id: todo.id) }
   let(:todo_id) { todo.id }
   let(:id) { tasks.first.id }
 
-  # generate JWT with Knock gem
-  def authenticated_header(user)
-    token = Knock::AuthToken.new(payload: { sub: user.id }).token
-    { 'Authorization' => "Bearer #{token}" }
-  end
-
   describe 'GET /private_todos/:todo_id/tasks' do
+    # Note `authenticated_header` is a custom spec helper to generate JWT with Knock gem
     before do
       get(
         "/private_todos/#{todo_id}/tasks",
@@ -178,7 +173,7 @@ RSpec.describe 'Tasks API' do
     end
 
     it 'returns status code 401 for unauthorized users' do
-      get(
+      put(
         "/private_todos/#{todo_id}/tasks/#{id}",
         params: valid_attributes,
         headers: authenticated_header(intruder)
