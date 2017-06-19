@@ -12,7 +12,7 @@ class PublicTodo < Todo
            source: :user
 
   after_save :create_membership
-
+  
   private
 
   def create_membership

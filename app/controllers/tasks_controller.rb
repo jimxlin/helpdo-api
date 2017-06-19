@@ -54,7 +54,7 @@ class TasksController < ApplicationController
   end
 
   def authorize
-    if (@todo.type == 'PublicTodo' && !@todo.admins.find_by_id(current_user.id)) ||
+    if (@todo.type == 'PublicTodo' && !@todo.admins.find_by(id: current_user.id)) ||
        (@todo.type == 'PrivateTodo' && @todo.creator.id != current_user.id)
       json_response('Not authorized to change this task', :unauthorized)
     end
