@@ -1,5 +1,8 @@
 class User < ApplicationRecord
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
+
+  has_many :assignments, dependent: :destroy
+  has_many :assigned_tasks, through: :assignments, source: :task
 
   # rows where user_id == self.id
   has_many :friendships, dependent: :destroy
@@ -28,7 +31,9 @@ class User < ApplicationRecord
             through: :inverse_friendships,
             source: :user
 
-  has_many :todos, dependent: :destroy
+  has_many :todos, dependent: :destroy # used for #create
+  has_many :private_todos, dependent: :destroy
+  has_many :public_todos, through: :memberships
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true

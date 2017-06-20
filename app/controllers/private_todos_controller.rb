@@ -5,7 +5,7 @@ class PrivateTodosController < ApplicationController
 
   # GET /private_todos
   def index
-    @todos = current_user.todos.all
+    @todos = current_user.private_todos.all
     json_response(@todos)
   end
 

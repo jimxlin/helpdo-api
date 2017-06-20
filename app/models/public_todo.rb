@@ -1,5 +1,5 @@
 class PublicTodo < Todo
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
 
   has_many :members,
            ->{ where(memberships: { is_admin: false}) },
@@ -12,7 +12,7 @@ class PublicTodo < Todo
            source: :user
 
   after_save :create_membership
-  
+
   private
 
   def create_membership

@@ -4,7 +4,7 @@ class TasksController < ApplicationController
   before_action :set_todo_task, only: [:show, :update, :destroy]
   before_action :authorize
 
-  # TODO make task visible to other users (only for is_shared == false)
+  # TODO make task visible to other users
 
   # GET /todos/:todo_id/tasks
   def index
@@ -17,7 +17,6 @@ class TasksController < ApplicationController
   end
 
   # POST /todos/:todo_id/tasks
-  # TODO how does this work for group todos
   def create
     @todo.tasks.create!(task_params)
     json_response(@todo, :created)
