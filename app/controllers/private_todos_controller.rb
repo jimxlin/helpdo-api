@@ -5,8 +5,8 @@ class PrivateTodosController < ApplicationController
 
   # GET /private_todos
   def index
-    @todos = current_user.private_todos.all
-    json_response(@todos)
+    todos = current_user.private_todos.all
+    json_response(todos)
   end
 
   # GET /private_todos/:id

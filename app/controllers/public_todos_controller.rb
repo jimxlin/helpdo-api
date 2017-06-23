@@ -6,8 +6,8 @@ class PublicTodosController < ApplicationController
 
   # GET /public_todos
   def index
-    @todos = current_user.public_todos.all
-    json_response(@todos)
+    todos = current_user.public_todos.all
+    json_response(todos)
   end
 
   # GET /public_todos/:id
