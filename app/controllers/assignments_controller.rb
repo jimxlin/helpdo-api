@@ -11,8 +11,13 @@ class AssignmentsController < ApplicationController
 
   # POST /public_todos/:public_todo_id/tasks/:task_id/assignments
   def create
-    assignment = @task.assignments.create!(assignment_params)
-    json_response(assignment, :created)
+    assignee_id = assignment_params[:user_id]
+    if member?(assignee_id)
+      assignment = @task.assignments.create!(assignment_params)
+      json_response(assignment, :created)
+    else
+      json_response('Assignee is not a member of this Todo', :forbidden)
+    end
   end
 
   # DELETE /public_todos/:public_todo_id/tasks/:task_id/assignments/:id
@@ -32,17 +37,20 @@ class AssignmentsController < ApplicationController
   end
 
   def authorize_member
-    todo = PublicTodo.find(params[:public_todo_id])
-    unless todo.members.find_by_id(current_user.id) ||
-           todo.admins.find_by_id(current_user.id)
+    unless member?(current_user.id)
       json_response('You are not a member of this Todo', :unauthorized)
     end
   end
 
   def authorize_admin
     todo = PublicTodo.find(params[:public_todo_id])
-    unless @todo.admins.find_by_id(current_user.id)
+    unless todo.admins.find_by_id(current_user.id)
       json_response('You are not an admin of this Todo', :unauthorized)
     end
+  end
+
+  def member?(user_id)
+    todo = PublicTodo.find(params[:public_todo_id])
+    todo.members.find_by(id: user_id) || todo.admins.find_by(id: user_id)
   end
 end

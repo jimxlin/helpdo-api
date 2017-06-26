@@ -30,6 +30,8 @@ class MembershipsController < ApplicationController
     end
   end
 
+  # TODO delete action and test 
+
   private
 
   def membership_params
@@ -49,8 +51,8 @@ class MembershipsController < ApplicationController
   end
 
   def authorize_member
-    unless @todo.members.find_by_id(current_user.id) ||
-           @todo.admins.find_by_id(current_user.id)
+    unless @todo.members.find_by(id: current_user.id) ||
+           @todo.admins.find_by(id: current_user.id)
       json_response('You are not a member of this Todo', :unauthorized)
     end
   end
