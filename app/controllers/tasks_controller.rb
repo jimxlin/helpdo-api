@@ -4,8 +4,6 @@ class TasksController < ApplicationController
   before_action :set_todo_task, only: [:show, :update, :destroy]
   before_action :authorize
 
-  # TODO make task visible to other users
-
   # GET /todos/:todo_id/tasks
   def index
     json_response(@todo.tasks)

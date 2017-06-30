@@ -4,6 +4,9 @@ class User < ApplicationRecord
   has_many :assignments, dependent: :destroy
   has_many :assigned_tasks, through: :assignments, source: :task
 
+  has_many :visibilities, dependent: :destroy
+  has_many :visible_tasks, through: :visibilities, source: :task
+
   # rows where user_id == self.id
   has_many :friendships, dependent: :destroy
 

@@ -8,6 +8,9 @@ RSpec.describe User, type: :model do
   it { should have_many(:assignments).dependent(:destroy) }
   it { should have_many(:assigned_tasks) }
 
+  it { should have_many(:visibilities).dependent(:destroy) }
+  it { should have_many(:visible_tasks) }
+
   it { should have_many(:friendships).dependent(:destroy) }
   it { should have_many(:inverse_friendships).dependent(:destroy) }
   it { should have_many(:friends) }

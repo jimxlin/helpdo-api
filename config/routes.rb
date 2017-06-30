@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   post 'user_token' => 'user_token#create'
   # TODO trim resourceful routes
   resources :private_todos do
-    resources :tasks
+    resources :tasks do
+      resources :visibilities #TODO visibilities controller
+    end
   end
   resources :public_todos do
     resources :tasks do
