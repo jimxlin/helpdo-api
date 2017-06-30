@@ -1,9 +1,9 @@
 class MembershipsController < ApplicationController
   before_action :authenticate_user
   before_action :set_todo
-  before_action :set_membership, only: [:update, :delete]
+  before_action :set_membership, only: [:update, :destroy]
   before_action :authorize_member
-  before_action :authorize_admin, only: [:create, :update, :delete]
+  before_action :authorize_admin, only: [:create, :update, :destroy]
 
   # GET /public_todos/:todo_id/memberships
   def index
@@ -23,14 +23,22 @@ class MembershipsController < ApplicationController
   # PUT /public_todos/:todo_id/memberships/:id
   def update
     if @membership.user_id == @todo.creator.id
-      json_response('Not authorized to change creator membership', :unauthorized)
+      json_response('Cannot change creator membership', :forbidden)
     else
       @membership.update!(update_membership_params)
       head :no_content
     end
   end
 
-  # TODO delete action and test 
+  # DELETE /public_todos/:public_todo_id/memberships/:id
+  def destroy
+    if @membership.user_id == @todo.creator.id
+      json_response('Cannot destroy creator membership', :forbidden)
+    else
+      @membership.destroy
+      head :no_content
+    end
+  end
 
   private
 

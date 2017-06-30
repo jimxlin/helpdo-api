@@ -150,12 +150,12 @@ RSpec.describe 'Memberships API', type: :request do
     context 'when the membership is for the creator' do
       let(:id) { user.memberships.first.id }
 
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
+      it 'returns status code 403' do
+        expect(response).to have_http_status(403)
       end
 
       it 'returns an unauthorized message' do
-        expect(response.body).to match(/Not authorized to change creator membership/)
+        expect(response.body).to match(/Cannot change creator membership/)
       end
     end
 
@@ -166,6 +166,32 @@ RSpec.describe 'Memberships API', type: :request do
         headers: authenticated_header(intruder)
       )
       expect(response).to have_http_status(401)
+    end
+  end
+
+  describe 'DELETE /public_todos/:public_todo_id/memberships/:id' do
+    it 'returns status code 204' do
+      delete(
+        "/public_todos/#{todo_id}/memberships/#{id}",
+        headers: authenticated_header(user)
+      )
+      expect(response).to have_http_status(204)
+    end
+
+    it 'returns status code 401 for unauthorized users' do
+      delete(
+        "/public_todos/#{todo_id}/memberships/#{id}",
+        headers: authenticated_header(intruder)
+      )
+      expect(response).to have_http_status(401)
+    end
+
+    it 'returns status code 403 when deleting creator membership' do
+      delete(
+        "/public_todos/#{todo_id}/memberships/#{user.memberships.first.id}",
+        headers: authenticated_header(admins.first)
+      )
+      expect(response).to have_http_status(403)
     end
   end
 end
