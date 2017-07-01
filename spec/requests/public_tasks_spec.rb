@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 RSpec.describe 'Tasks API' do
   let!(:user) { create(:user) }
   let!(:intruder) { create(:user) }

@@ -1,5 +1,5 @@
 require 'rails_helper'
-# TODO differentiate tests for private and public todos, maybe use a new nested route
+
 RSpec.describe 'Tasks API' do
   let!(:user) { create(:user) }
   let!(:intruder) { create(:user) }

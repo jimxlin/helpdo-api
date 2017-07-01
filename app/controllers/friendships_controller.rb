@@ -9,7 +9,7 @@ class FriendshipsController < ApplicationController
       sent_friend_requests: current_user.friend_requests.pluck(:id, :name),
       received_friend_requests: current_user.inverse_friend_requests.pluck(:id, :name)
     }
-    json_response(friends_and_requests.to_json)
+    json_response(friends_and_requests)
   end
 
   # POST /friendships
