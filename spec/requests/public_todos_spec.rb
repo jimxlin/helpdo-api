@@ -31,46 +31,6 @@ RSpec.describe 'PublicTodos API', type: :request do
     end
   end
 
-  describe 'GET /public_todos/:id' do
-    before do
-      get(
-        "/public_todos/#{todo_id}",
-        headers: authenticated_header(user)
-      )
-    end
-
-    context 'when the record exists' do
-      it 'returns the todo' do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(todo_id)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when the record does not exist' do
-      let(:todo_id) { 0 }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find PublicTodo/)
-      end
-    end
-
-    it 'returns status code 401 for unauthorized users' do
-      get(
-        "/public_todos/#{todo_id}",
-        headers: authenticated_header(intruder)
-      )
-      expect(response).to have_http_status(401)
-    end
-  end
-
   describe 'POST /public_todos' do
     let(:valid_attributes) do
       { title: 'Shopping List', type: 'PublicTodo' }

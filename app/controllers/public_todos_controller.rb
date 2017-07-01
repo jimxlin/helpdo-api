@@ -10,12 +10,6 @@ class PublicTodosController < ApplicationController
     json_response(todos)
   end
 
-  # GET /public_todos/:id
-  # TODO necessary for the api?, can fetch tasks directly with index info
-  def show
-    json_response(@todo)
-  end
-
   # POST /public_todos
   def create
     @todo = current_user.todos.create!(todo_params)

@@ -9,11 +9,6 @@ class PrivateTodosController < ApplicationController
     json_response(todos)
   end
 
-  # GET /private_todos/:id
-  def show
-    json_response(@todo)
-  end
-
   # POST /private_todos
   def create
     @todo = current_user.todos.create!(todo_params)
