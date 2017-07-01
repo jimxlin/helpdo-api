@@ -9,24 +9,24 @@ class TasksController < ApplicationController
     json_response(@todo.tasks)
   end
 
-  # GET /todos/:todo_id/tasks/:id
+  # GET /private||public_todos/:todo_id/tasks/:id
   def show
     json_response(@task)
   end
 
-  # POST /todos/:todo_id/tasks
+  # POST /private||public_todos/:todo_id/tasks
   def create
     @todo.tasks.create!(task_params)
     json_response(@todo, :created)
   end
 
-  # PUT /todos/:todo_id/tasks/:id
+  # PUT /private||public_todos/:todo_id/tasks/:id
   def update
     @task.update(task_params)
     head :no_content
   end
 
-  # DELETE /todos/:todo_id/tasks/:id
+  # DELETE /private||public_todos/:todo_id/tasks/:id
   def destroy
     @task.destroy
     head :no_content
