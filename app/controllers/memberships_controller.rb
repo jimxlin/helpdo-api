@@ -11,7 +11,7 @@ class MembershipsController < ApplicationController
       admins: @todo.admins.pluck(:id, :name, :bio),
       members: @todo.members.pluck(:id, :name, :bio)
     }
-    json_response(all_members.to_json)
+    json_response(all_members)
   end
 
   # POST /public_todos/:todo_id/memberships

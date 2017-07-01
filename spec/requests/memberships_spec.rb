@@ -35,7 +35,7 @@ RSpec.describe 'Memberships API', type: :request do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns all todo memberships' do
+      it 'returns all todo members' do
         # Note `json` is a custom spec helper to parse JSON responses
         expect(json['admins'].size).to eq(5)
         expect(json['members'].size).to eq(10)

@@ -7,4 +7,7 @@ class Task < ApplicationRecord
   has_many :visible_users, through: :visibilities, source: :user
 
   validates :name, presence: true
+
+  # TODO custom validator methods for Assignment, Membership, Visibility
+  # to make sure Task's Todo is private/public
 end

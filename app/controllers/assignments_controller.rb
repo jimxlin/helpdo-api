@@ -6,7 +6,7 @@ class AssignmentsController < ApplicationController
 
   # GET /public_todos/:public_todo_id/tasks/:task_id/assignments
   def index
-    json_response(@task.assignments)
+    json_response(@task.assigned_members.pluck(:id, :name))
   end
 
   # POST /public_todos/:public_todo_id/tasks/:task_id/assignments

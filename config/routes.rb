@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # TODO trim resourceful routes
   resources :private_todos do
     resources :tasks do
-      resources :visibilities #TODO visibilities controller
+      resources :visibilities
     end
   end
   resources :public_todos do

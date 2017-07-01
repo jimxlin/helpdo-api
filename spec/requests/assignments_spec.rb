@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Assignments API', type: :request do
   let!(:user) { create(:user) }
   let!(:todo) { create(:public_todo, user_id: user.id) }
-  let!(:task) { create(:task, todo_id:todo.id) }
+  let!(:task) { create(:task, todo_id: todo.id) }
   let!(:assignees) do
     assignees = create_list(:user, 5)
     assignees.each do |assignee|
@@ -36,7 +36,7 @@ RSpec.describe 'Assignments API', type: :request do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns all todo task assignments' do
+      it 'returns all todo task assignees' do
         # Note `json` is a custom spec helper to parse JSON responses
         expect(json.size).to eq(5)
       end
