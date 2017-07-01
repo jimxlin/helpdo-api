@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  resources :users, only: [:index, :create, :update, :destroy]
+  resources :users, only: [:index, :create]# TODO , :update, :destroy]
+  get 'visible_tasks', to: 'users#visible_tasks'
   resources :friendships, only: [:index, :create, :update, :destroy]
-  post 'user_token' => 'user_token#create'
-  # index '' => ''
+  post 'user_token', to: 'user_token#create'
   resources :private_todos, only: [:index, :show, :create, :update, :destroy] do
     resources :tasks, only: [:index, :show, :create, :update, :destroy] do
       resources :visibilities, only: [:index, :create, :destroy]

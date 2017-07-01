@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user, only: [:index]
+  before_action :authenticate_user, only: [:index, :visible_tasks]
 
   # GET /users?query=...
   def index
@@ -10,6 +10,11 @@ class UsersController < ApplicationController
     else
       json_response([])
     end
+  end
+
+  # GET /visible_tasks
+  def visible_tasks
+    json_response(current_user.visible_tasks)
   end
 
   # POST /users
