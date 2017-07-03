@@ -16,8 +16,13 @@ class MembershipsController < ApplicationController
 
   # POST /public_todos/:todo_id/memberships
   def create
-    membership = @todo.memberships.create!(membership_params)
-    json_response(membership, :created)
+    user_id = membership_params[:user_id].to_i
+    if current_user.all_friends.map(&:id).include?(user_id)
+      membership = @todo.memberships.create!(membership_params)
+      json_response(membership, :created)
+    else
+      json_response('Can only add members from friends', :forbidden)
+    end
   end
 
   # PUT /public_todos/:todo_id/memberships/:id

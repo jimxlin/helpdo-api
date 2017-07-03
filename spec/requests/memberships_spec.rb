@@ -2,6 +2,11 @@ require 'rails_helper'
 
 RSpec.describe 'Memberships API', type: :request do
   let!(:user) { create(:user) }
+  let!(:friend) do
+    friend = create(:user)
+    user.friendships.create(friend_id: friend.id, is_accepted: true)
+    friend
+  end
   let!(:other_user) { create(:user) }
   let!(:todo) { create(:public_todo, user_id: user.id) }
   let!(:admins) { create_list(:user, 4) }
@@ -64,7 +69,7 @@ RSpec.describe 'Memberships API', type: :request do
   end
 
   describe 'POST /public_todos/:todo_id/memberships' do
-    let(:valid_attributes) { { user_id: other_user.id, is_admin: false } }
+    let(:valid_attributes) { { user_id: friend.id, is_admin: false } }
 
     context 'when the request is valid' do
       before do
@@ -80,7 +85,7 @@ RSpec.describe 'Memberships API', type: :request do
       end
 
       it 'creates the members' do
-        expect(Membership.find_by(user_id: other_user.id)).to be_truthy
+        expect(Membership.find_by(user_id: friend.id)).to be_truthy
       end
     end
 
@@ -88,17 +93,17 @@ RSpec.describe 'Memberships API', type: :request do
       before do
         post(
           "/public_todos/#{todo_id}/memberships",
-          params: {},
+          params: {user_id: other_user.id, is_admin: false},
           headers: authenticated_header(user)
         )
       end
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      it 'returns status code 403' do
+        expect(response).to have_http_status(403)
       end
 
       it 'returns a validation failure message' do
-        expect(response.body).to match(/Validation failed: User must exist/)
+        expect(response.body).to match(/Can only add members from friends/)
       end
     end
 
