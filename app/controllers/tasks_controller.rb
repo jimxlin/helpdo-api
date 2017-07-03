@@ -35,7 +35,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.permit(:name, :is_done)
+    params.permit(:name, :is_done, :helpers)
   end
 
   def set_todo
