@@ -1,6 +1,6 @@
 # HelpDo Web API
 
-HelpDo is a social platform for creating and sharing todo lists. This API authenticates with JWT via [knock](https://github.com/nsarno/knock). For detailed information on the endpoints, consult [routes.rb](config/routes) and the [controllers folder](controllers).
+HelpDo is a social platform for creating and sharing todo lists. This API authenticates with JWT via [knock](https://github.com/nsarno/knock). For detailed information on the endpoints, consult `routes.rb` and the `controllers` folder.
 
 ## Friends
 
